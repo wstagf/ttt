@@ -39,11 +39,4 @@ app.controller('loginController', function ($scope, $http, toastr) {
                 toastr.error('Erro no servidor', 'Erro');
             });
     }
-
-    $scope.sair = function () {
-        toastr.info('Saindo do sistema', 'Atenção');
-        $http.get('api/logout')
-        window.location = "index.php"
-    }
-
 })
