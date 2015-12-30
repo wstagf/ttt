@@ -12,23 +12,43 @@ session_start();
 
 header("Content-Type: application/json");
 
+
+$app->post(
+    '/registration',
+    function () use ($app, $db) {
+		$data = json_decode($app->request()->getBody());
+        $usuario = (isset($data->usuario)) ? $data->usuario : "";
+	    $pass   = (isset($data->senha)) ? $data->senha.'': "" ;
+		$senha = md5($pass); 
+
+		$sql = "INSERT INTO usuario (usuario, senha, pass) VALUES ('".$usuario."', '".$senha."', '".$pass."');";
+		$consulta = $db->con()->prepare($sql);
+		if($consulta->execute()){
+			echo json_encode(array("erro"=>false, "usuario"=>$usuario,  "pass"=>$pass, "senha"=>$senha, "sql" => $sql));
+		} else {
+			echo json_encode(array("erro"=>true));
+		}
+    }
+);
+
 $app->post(
     '/login',
-    function () use ($app) {
+    function () use ($app, $db) {
         
         $data = json_decode($app->request()->getBody());
         $usuario = (isset($data->usuario)) ? $data->usuario : "";
 	    $senha   = (isset($data->senha)) ? $data->senha : "";
         
-        if($usuario=="admin" && $senha=="123456"){
-            
+		$consulta = $db->con()->prepare("select senha from usuario where usuario = ".$usuario);
+        //$consulta->bindParam(':IDNOTICIA', $idnoticia);
+        $consulta->execute();
+		$result = $consulta->fetchColumn();
+        if(md5($senha)==$result){
             $_SESSION['logado']=true;
-            
-            echo json_encode(array("logado"=>true));
+            echo json_encode(array("logado"=>true, "resposta"=> $result));
         } else {
-            echo json_encode(array("logado"=>false));   
+            echo json_encode(array("logado"=>false, "resposta"=> $result));   
         }
-        
     }
 );
 
@@ -49,4 +69,15 @@ function auth(){
     }
 }
 
+$app->get(
+    '/logout',
+    function () use ($app) {
+        session_destroy();
+        exit;
+    }
+);
+
+
 $app->run();
+
+
