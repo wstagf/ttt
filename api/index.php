@@ -21,7 +21,7 @@ $app->post(
 	    $pass   = (isset($data->senha)) ? $data->senha.'': "" ;
 		$senha = md5($pass); 
 
-		$sql = "INSERT INTO usuario (usuario, senha, pass) VALUES ('".$usuario."', '".$senha."', '".$pass."');";
+		$sql = "INSERT INTO usuario (usuario, senha, idPerfilUsuario, status) VALUES ('".$usuario."', '".$senha."', 1, 1);";
 		$consulta = $db->con()->prepare($sql);
 		if($consulta->execute()){
 			echo json_encode(array("erro"=>false, "usuario"=>$usuario,  "pass"=>$pass, "senha"=>$senha, "sql" => $sql));
@@ -78,8 +78,20 @@ $app->get(
 );
 
 
+$app->get('/listarUsuarios', 'auth', function () use ($app, $db) {
+        $consulta = $db->con()->prepare("select usuario.id, usuario.usuario as descricaoUsuario, perfilusuario.descricao as 'descricaoPefil', usuario.status  from usuario inner join perfilusuario on usuario.idPerfilUsuario = perfilusuario.id;");
+        $consulta->execute();
+		if ( $result = $consulta->fetchAll(PDO::FETCH_ASSOC)) {
+			echo json_encode(array("erro"=>"false", "result"=>$result ));
+		} else {
+			echo json_encode(array("erro"=>"true", "result"=>$result ));
+		}
+
+    }
+);
+
+
+
 $app->run();
-
-
 
 
