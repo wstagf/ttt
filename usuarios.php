@@ -29,14 +29,16 @@
                                     <th>ID</th>
                                     <th>Nome</th>
                                     <th>Perfil</th>
+									<th>Status</th>
                                     <th>Açoes</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="odd gradeX">
-                                    <td>Trident</td>
-                                    <td>Internet Explorer 4.0</td>
-                                    <td>Win 95+</td>
+                                <tr class="odd gradeX" ng-repeat="model in listaUsuarios track by model.id">
+                                    <td>{{model.id}}</td>
+                                    <td>{{model.descricaoUsuario}}</td>
+                                    <td>{{model.descricaoPefil}}</td>
+									<td> <span ng-if="model.status == 1" > Ativo  </span> <span ng-if="model.status == 0" > Inativo  </span> </td>
                                     <td class="center">
 										<a href="#"><i class="fa fa-info-circle fa-fw"></i> Editar</a>
 										<a href="#"><i class="fa fa-minus-circle fa-fw"></i> Excluir</a>
