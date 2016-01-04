@@ -4,10 +4,7 @@ app.controller('loginController', function ($scope, $http, toastr) {
         senha: ''
     };
 
-    $scope.loginAdd = {
-        usuario: '',
-        senha: ''
-    };
+
 
     $scope.fazerLogin = function () {
         $http.post('api/login', $scope.login)
@@ -21,22 +18,6 @@ app.controller('loginController', function ($scope, $http, toastr) {
             });
     }
 
-    $scope.inserirUsuario = function () {
-        $http.post('api/registration', $scope.loginAdd)
-            .success(function (data) {
-                console.log(data);
-                if (!data.erro) {
-                    $scope.loginAdd = {
-                        usuario: '',
-                        senha: ''
-                    };
-                    toastr.success('Usuário adicionado!', 'Sucesso');
-                } else {
-                    alert('Deu erro')
-                }
-            })
-            .error(function () {
-                toastr.error('Erro no servidor', 'Erro');
-            });
-    }
+    
+
 })
