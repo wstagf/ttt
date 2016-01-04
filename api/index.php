@@ -118,6 +118,37 @@ $app->get('/excluirUsuario/:idUsuario', 'auth', function ($idUsuario) use ($app,
 );
 
 
+$app->post('/alterarUsuario/:idUsuario', 'auth', function ($idUsuario) use ($app, $db) {
+        
+        $data = json_decode($app->request()->getBody());
+        $idUsuario = (int)$idUsuario;
+		$usuario = (isset($data->usuario)) ? $data->usuario : "";
+		$idPerfilUsuario = (isset($data->idPerfilUsuario)) ? $data->idPerfilUsuario : "1";
+		$status = (isset($data->status)) ? $data->status : "0";
+        
+        $consulta = $db->con()->prepare('UPDATE usuario 
+                                        SET 
+                                            usuario = :USUARIO, 
+                                            idPerfilUsuario = :IDPERFILUSUARIO, 
+                                            status = :STATUS
+                                        WHERE 
+                                            id = :IDUSUARIO');
+    
+        $consulta->bindParam(':IDUSUARIO', $idUsuario);
+        $consulta->bindParam(':USUARIO', $usuario);
+        $consulta->bindParam(':IDPERFILUSUARIO', $idPerfilUsuario);
+        $consulta->bindParam(':STATUS', $status);
+    
+        if($consulta->execute()){
+            echo json_encode(array("erro"=>false));
+        } else {
+            echo json_encode(array("erro"=>true));
+        }
+        
+    }
+);
+
+
 
 
 $app->run();
