@@ -90,6 +90,34 @@ $app->get('/listarUsuarios', 'auth', function () use ($app, $db) {
     }
 );
 
+$app->get('/getUsuario/:idUsuario', 'auth', function ($idUsuario) use ($app, $db) {
+        $idUsuario = (int)$idUsuario;
+        $consulta = $db->con()->prepare("select usuario.id, usuario.usuario, usuario.idPerfilUsuario, usuario.status from usuario where usuario.id = :IDUSUARIO");
+        $consulta->bindParam(':IDUSUARIO', $idUsuario);
+        $consulta->execute();
+        $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode(array("usuario"=>$usuarios[0]));
+    }
+);
+
+
+$app->get('/excluirUsuario/:idUsuario', 'auth', function ($idUsuario) use ($app, $db) {       
+    
+        $idUsuario = (int)$idUsuario;
+
+        $consulta = $db->con()->prepare("DELETE FROM usuario WHERE id = :IDUSUARIO");
+        $consulta->bindParam(':IDUSUARIO', $idUsuario);        
+    
+        if($consulta->execute()){
+            echo json_encode(array("erro"=>false));
+        } else {
+            echo json_encode(array("erro"=>true));
+        }
+        
+    }
+);
+
+
 
 
 $app->run();
