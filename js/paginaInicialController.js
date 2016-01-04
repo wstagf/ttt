@@ -112,4 +112,26 @@ app.controller('paginaInicialController', function ($scope, $http, toastr) {
             });
     };
 
+    $scope.alterarUsuario = function () {
+        $http
+            .post('api/alterarUsuario/' + $scope.usuario.id, $scope.usuario)
+            .success(function (data) {
+
+                if (!data.erro) {
+                    // deu certo a alteração
+                    toastr.success('Usuario atualizado com sucesso', 'Sucesso');
+                    $scope.listarUsuarios();
+                    $scope.showListUsuario();
+                } else {
+                    toastr.error('Falha em alterar usuario', 'Erro');
+                    console.log(data);
+                }
+
+            })
+            .error(function (data) {
+                toastr.error('Falha em alterar usuario', 'Erro');
+                console.log(data);
+            });
+    };
+
 })
