@@ -10,8 +10,6 @@ app.controller('paginaInicialController', function ($scope, $http, toastr) {
 
     $scope.navegar = function (parametro) {
         $scope.pagina = parametro + '.php';
-        $scope.listarUsuarios();
-        
     }
 
     $scope.usuario = {
@@ -134,4 +132,5 @@ app.controller('paginaInicialController', function ($scope, $http, toastr) {
             });
     };
 
+ $scope.listarUsuarios();
 })
