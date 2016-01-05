@@ -13,6 +13,28 @@ session_start();
 header("Content-Type: application/json");
 
 
+$app->get(
+    '/logout',
+    function () use ($app) {
+        session_destroy();
+        header("Location: index.php");
+        exit;
+    }
+);
+
+
+function auth(){
+    if(isset($_SESSION['logado'])){
+        return true;
+    } else {
+        $app = \Slim\Slim::getInstance();
+        echo json_encode(array("loginerror"=>true,"msg"=>"Acesso Negado"));
+        $app->stop();
+    }
+}
+
+
+
 // Crud USUARIo
 
 // Create
@@ -138,28 +160,99 @@ $app->get('/restrito', 'auth', function () use ($app) {
     }
 );
 
+// fim Crud  Usuario
 
 
 
-$app->get(
-    '/logout',
-    function () use ($app) {
-        session_destroy();
-        header("Location: index.php");
-        exit;
+
+// Crud Perfil Usuario
+
+// Create
+$app->post(
+    '/createPerfilUsuario',
+    function () use ($app, $db) {
+        $data = json_decode($app->request()->getBody());
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+        $sql = "INSERT INTO perfilusuario (descricao) VALUES ('".$descricao."');";
+        $consulta = $db->con()->prepare($sql);
+        if($consulta->execute()){
+            echo json_encode(array("erro"=>false, "descricao"=>$descricao, "sql" => $sql));
+        } else {
+            echo json_encode(array("erro"=>true));
+        }
+    }
+);
+
+// READ - 01: Lista Completa
+$app->get('/listarPerfilUsuarios', 'auth', function () use ($app, $db) {
+        $consulta = $db->con()->prepare("select perfilusuario.id, perfilusuario.descricao from perfilusuario order by perfilusuario.id");
+        $consulta->execute();
+        if ( $result = $consulta->fetchAll(PDO::FETCH_ASSOC)) {
+            echo json_encode(array("erro"=>"false", "result"=>$result ));
+        } else {
+            echo json_encode(array("erro"=>"true", "result"=>$result ));
+        }
+    }
+);
+
+// READ - 02: item unico
+$app->get('/getPerfilUsuario/:idPerfilUsuario', 'auth', function ($idPerfilUsuario) use ($app, $db) {
+        $idPerfilUsuario = (int)$idPerfilUsuario;
+        $consulta = $db->con()->prepare("select perfilusuario.id, perfilusuario.descricao from perfilusuario  where perfilusuario.id = :IDPERFILUSUARIO");
+        $consulta->bindParam(':IDPERFILUSUARIO', $idPerfilUsuario);
+        $consulta->execute();
+        $result = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode(array("perfilusuario"=>$result[0]));
     }
 );
 
 
-function auth(){
-    if(isset($_SESSION['logado'])){
-        return true;
-    } else {
-        $app = \Slim\Slim::getInstance();
-        echo json_encode(array("loginerror"=>true,"msg"=>"Acesso Negado"));
-        $app->stop();
+// Update
+$app->post('/alterarPerfilUsuario/:idPerfilUsuario', 'auth', function ($idPerfilUsuario) use ($app, $db) {
+        
+        $data = json_decode($app->request()->getBody());
+        $idPerfilUsuario = (int)$idPerfilUsuario;
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+       
+        $consulta = $db->con()->prepare('update perfilusuario 
+                                        SET 
+                                            descricao = :DESCRICAO
+                                        WHERE 
+                                            id = :IDPERFILUSUARIO');
+    
+        $consulta->bindParam(':IDPERFILUSUARIO', $idPerfilUsuario);
+        $consulta->bindParam(':DESCRICAO', $descricao);
+   
+        if($consulta->execute()){
+            echo json_encode(array("erro"=>false));
+        } else {
+            echo json_encode(array("erro"=>true));
+        }
+        
     }
-}
+);
+
+
+
+// Delete
+$app->get('/excluirPerfilUsuario/:idPerfilUsuario', 'auth', function ($idPerfilUsuario) use ($app, $db) {       
+    
+        $idPerfilUsuario = (int)$idPerfilUsuario;
+        $consulta = $db->con()->prepare("DELETE FROM perfilusuario WHERE id = :IDPERFILUSUARIO");
+        $consulta->bindParam(':IDPERFILUSUARIO', $idPerfilUsuario);        
+    
+        if($consulta->execute()){
+            echo json_encode(array("erro"=>false));
+        } else {
+            echo json_encode(array("erro"=>true));
+        }
+        
+    }
+);
+
+
+// fim Crud PERFIL  Usuario
+
 
 $app->run();
 
