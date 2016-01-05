@@ -108,7 +108,7 @@ session_start();
 											<a href="#" ng-click="navegar('usuarios')"><i class="fa fa-user fa-fw"></i>Usuários</a>
 										</li>
 										<li>
-											<a href="buttons.html">Buttons</a>
+											<a href="#" ng-click="navegar('perfilusuario');"><i class="fa fa-users fa-fw"></i>Perfil de usuário</a>
 										</li>
 										<li>
 											<a href="notifications.html">Notifications</a>
