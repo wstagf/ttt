@@ -1,30 +1,23 @@
-app.controller('loginController', function($scope, $http){
-   
+app.controller('loginController', function ($scope, $http, toastr) {
     $scope.login = {
-        usuario : "",
-        senha : ""
+        usuario: '',
+        senha: ''
     };
-    
-    $scope.fazerLogin = function(){
-        
-        if($scope.login.usuario.trim()=="" || $scope.login.senha.trim()==""){
-            alert("Informe usuário e senha!");
-            return;
-        }
-        
-        $http
-            .post('../api/login', $scope.login)
-            .success(function(data){
+
+
+
+    $scope.fazerLogin = function () {
+        $http.post('api/login', $scope.login)
+            .success(function (data) {
                 console.log(data);
-            
-                if(data.logado){
-                    window.location = "painel-inicial.php"
+                if (data.logado) {
+                    window.location = "home.php"
                 } else {
-                    alert("Verifique usuário ou senha");   
+                    toastr.info('Verifique o usuário e a senha', 'Atenção');
                 }
-                
             });
-        
     }
+
     
-});
+
+})
