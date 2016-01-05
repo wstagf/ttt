@@ -115,7 +115,7 @@ $app->post(
         $usuario = (isset($data->usuario)) ? $data->usuario : "";
         $senha   = (isset($data->senha)) ? $data->senha : "";
         
-        $consulta = $db->con()->prepare("select senha from usuario where usuario = ".$usuario);
+        $consulta = $db->con()->prepare("select senha from usuario where usuario = '".$usuario."'");
         //$consulta->bindParam(':IDNOTICIA', $idnoticia);
         $consulta->execute();
         $result = $consulta->fetchColumn();
