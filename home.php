@@ -105,23 +105,31 @@ session_start();
 									<a href="#" ><i class="fa fa-table fa-fw"></i>Cadastros<span class="fa arrow"></span></a>
 									<ul class="nav nav-second-level">
 										<li>
-											<a href="#" ng-click="navegar('usuarios')"><i class="fa fa-user fa-fw"></i>Usuários</a>
+											<a href="#" ng-click="navegar('usuarios')">Usuários</a>
 										</li>
 										<li>
-											<a href="#" ng-click="navegar('perfilusuario');"><i class="fa fa-users fa-fw"></i>Perfil de usuário</a>
+											<a href="#" ng-click="navegar('perfilusuario');">Perfil de usuário</a>
 										</li>
 										<li>
-											<a href="notifications.html">Notifications</a>
+											<a href="#" ng-click="navegar('tipoAgencia');">Tipo de Agencias</a>
 										</li>
 										<li>
-											<a href="typography.html">Typography</a>
+											<a href="#" ng-click="navegar('tipoDocumento');">Tipo de Documentos</a>
 										</li>
 										<li>
-											<a href="icons.html"> Icons</a>
+											<a href="#" ng-click="navegar('tipoSituacaoContrato');">Tipo de Situação do Contrato</a>
 										</li>
 										<li>
-											<a href="grid.html">Grid</a>
+											<a href="#" ng-click="navegar('tipoVenda');">Tipo de Vendas</a>
 										</li>
+										<li>
+											<a href="#" ng-click="navegar('supervisor');">Supervisor</a>
+										</li>
+										<li>
+											<a href="#" ng-click="navegar('filial');">Filiais</a>
+										</li>
+										
+
 									</ul>
 									<!-- /.nav-second-level -->
 								</li>
@@ -198,10 +206,17 @@ session_start();
 
 		<script src="js/angular/angular.min.js"></script>
 		<script src="js/angular/angular-toastr.tpls.min.js"></script>
-        	<script src="js/app.module.js"></script>
+        <script src="js/app.module.js"></script>
 		<script src="js/loginController.js"></script>
-		<script src="js/paginaInicialController.js"></script>
-        	<script src="js/perfilUsuarioController.js"></script>
+        <script src="js/paginaInicialController.js"></script>
+		<script src="js/perfilUsuarioController.js"></script>
+		<script src="js/tipoAgenciaController.js"></script>
+		<script src="js/tipoDocumentoController.js"></script>
+		<script src="js/tipoSituacaoContratoController.js"></script>
+		<script src="js/tipoVendaController.js"></script>
+		<script src="js/supervisorController.js"></script>
+		<script src="js/filialController.js"></script>
+		
 	</home>
 </html>
   
