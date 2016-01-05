@@ -6,7 +6,8 @@ class Db {
    public function con(){
        if($this->con==null){
            $this->con = new PDO(
-                \sprintf("mysql:host=%s;dbname=%s;charset=utf8", "mysql01.aguiarobo.hospedagemdesites.ws", "aguiarobo"), 
+            // \sprintf("mysql:host=%s;dbname=%s;charset=utf8", "mysql01.aguiarobo.hospedagemdesites.ws", "aguiarobo"), "aguiarobo",  "aguiarobo",
+			    \sprintf("mysql:host=%s;dbname=%s;charset=utf8", "127.0.0.1", "angularnoticiasv1"), "root",  "",
                 "aguiarobo", 
                 "aguiarobo",
                 array(
