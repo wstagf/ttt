@@ -76,7 +76,7 @@ app.controller('FilialController', function ($scope, $http, toastr) {
     $scope.editarFilial = function (idFilial) {
         $http.get('api/getFilial/' + idFilial)
             .success(function (data) {
-                $scope.Filial = data.Filial;
+                $scope.Filial = data.result;
                 $scope.showEditarFilial();
             })
             .error(function (data) {
