@@ -76,7 +76,7 @@ app.controller('tipoAgenciaController', function ($scope, $http, toastr) {
     $scope.editarTipoAgencia = function (idTipoAgencia) {
         $http.get('api/getTipoAgencia/' + idTipoAgencia)
             .success(function (data) {
-                $scope.TipoAgencia = data.TipoAgencia;
+                $scope.TipoAgencia = data.result;
                 $scope.showEditarTipoAgencia();
             })
             .error(function (data) {
