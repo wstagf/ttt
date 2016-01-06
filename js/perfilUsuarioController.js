@@ -76,7 +76,7 @@ app.controller('perfilusuarioController', function ($scope, $http, toastr) {
     $scope.editarPerfilUsuario = function (idPerfilUsuario) {
         $http.get('api/getPerfilUsuario/' + idPerfilUsuario)
             .success(function (data) {
-                $scope.perfilusuario = data.perfilusuario;
+                $scope.perfilusuario = data.result;
                 $scope.showEditarPerfilUsuario();
             })
             .error(function (data) {
