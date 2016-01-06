@@ -76,7 +76,7 @@ app.controller('tipoDocumentoController', function ($scope, $http, toastr) {
     $scope.editarTipoDocumento = function (idTipoDocumento) {
         $http.get('api/getTipoDocumento/' + idTipoDocumento)
             .success(function (data) {
-                $scope.TipoDocumento = data.TipoDocumento;
+                $scope.TipoDocumento = data.result;
                 $scope.showEditarTipoDocumento();
             })
             .error(function (data) {
