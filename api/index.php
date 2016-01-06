@@ -783,4 +783,105 @@ $app->get('/excluirSupervisor/:idSupervisor', 'auth', function ($idSupervisor) u
 
 
 
+// Crud Filiais
+$app->post(
+    '/createFilial',
+    function () use ($app) {
+		$data = json_decode($app->request()->getBody());
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+
+        $link =createDB();
+       
+		$sql = "INSERT INTO Filial (descricao) VALUES ('".$descricao."');";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false, "descricao"=>$descricao, "sql" => $sql));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 01: Lista Completa
+$app->get('/listarFilials', 'auth', function () use ($app) {
+		$link = createDB();
+		$sql = "select Filial.id, Filial.descricao from Filial order by Filial.id";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows ));
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 02: item unico
+$app->get('/getFilial/:idFilial', 'auth', function ($idFilial) use ($app) {
+		$idFilial = (int)$idFilial;
+		$link = createDB();
+		$sql = "select Filial.id, Filial.descricao from Filial  where Filial.id = ".$idFilial.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows[0] ));
+        }
+		 mysql_close($link);
+    }
+);
+// Update
+$app->post('/alterarFilial/:idFilial', 'auth', function ($idFilial) use ($app) {
+        
+        $data = json_decode($app->request()->getBody());
+        $idFilial = (int)$idFilial;
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+       
+		$link =createDB();
+        
+		$sql = "UPDATE Filial  SET  descricao = '".$descricao."' WHERE  id = ".$idFilial.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+        
+    }
+);
+// Delete
+$app->get('/excluirFilial/:idFilial', 'auth', function ($idFilial) use ($app) {       
+		$idFilial = (int)$idFilial;
+        $link =createDB();
+        
+        $sql = "DELETE FROM Filial WHERE id = ".$idFilial.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// fim Crud  Filiais
+
+
+
 $app->run();
