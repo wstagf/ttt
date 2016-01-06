@@ -89,7 +89,7 @@ app.controller('paginaInicialController', function ($scope, $http, toastr) {
     $scope.editarUsuario = function (idUsuario) {
         $http.get('api/getUsuario/' + idUsuario)
             .success(function (data) {
-                $scope.usuario = data.usuario;
+                $scope.usuario = data.result;
                 $scope.showEditarUsuario();
             })
             .error(function (data) {
