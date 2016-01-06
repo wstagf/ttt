@@ -76,7 +76,7 @@ app.controller('SupervisorController', function ($scope, $http, toastr) {
     $scope.editarSupervisor = function (idSupervisor) {
         $http.get('api/getSupervisor/' + idSupervisor)
             .success(function (data) {
-                $scope.Supervisor = data.Supervisor;
+                $scope.Supervisor = data.result;
                 $scope.showEditarSupervisor();
             })
             .error(function (data) {
