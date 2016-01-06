@@ -680,4 +680,107 @@ $app->get('/excluirTipoVenda/:idTipoVenda', 'auth', function ($idTipoVenda) use 
 // fim Crud  Tipo vendas
 
 
+
+
+// Crud Supervisores
+$app->post(
+    '/createSupervisor',
+    function () use ($app) {
+		$data = json_decode($app->request()->getBody());
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+
+        $link =createDB();
+       
+		$sql = "INSERT INTO Supervisor (descricao) VALUES ('".$descricao."');";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false, "descricao"=>$descricao, "sql" => $sql));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 01: Lista Completa
+$app->get('/listarSupervisors', 'auth', function () use ($app) {
+		$link = createDB();
+		$sql = "select Supervisor.id, Supervisor.descricao from Supervisor order by Supervisor.id";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows ));
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 02: item unico
+$app->get('/getSupervisor/:idSupervisor', 'auth', function ($idSupervisor) use ($app) {
+		$idSupervisor = (int)$idSupervisor;
+		$link = createDB();
+		$sql = "select Supervisor.id, Supervisor.descricao from Supervisor  where Supervisor.id = ".$idSupervisor.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows[0] ));
+        }
+		 mysql_close($link);
+    }
+);
+// Update
+$app->post('/alterarSupervisor/:idSupervisor', 'auth', function ($idSupervisor) use ($app) {
+        
+        $data = json_decode($app->request()->getBody());
+        $idSupervisor = (int)$idSupervisor;
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+       
+		$link =createDB();
+        
+		$sql = "UPDATE Supervisor  SET  descricao = '".$descricao."' WHERE  id = ".$idSupervisor.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+        
+    }
+);
+// Delete
+$app->get('/excluirSupervisor/:idSupervisor', 'auth', function ($idSupervisor) use ($app) {       
+		$idSupervisor = (int)$idSupervisor;
+        $link =createDB();
+        
+        $sql = "DELETE FROM Supervisor WHERE id = ".$idSupervisor.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// fim Crud Supervisores
+
+
+
 $app->run();
