@@ -479,4 +479,103 @@ $app->get('/excluirTipoDocumento/:idTipoDocumentoa', 'auth', function ($idTipoDo
 // fim Crud  Tipo Documento
 
 
+// Crud Tipo SituacaoContrato
+$app->post(
+    '/createTipoSituacaoContrato',
+    function () use ($app) {
+		$data = json_decode($app->request()->getBody());
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+
+        $link =createDB();
+       
+		$sql = "INSERT INTO tipoSituacaoContrato (descricao) VALUES ('".$descricao."');";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false, "descricao"=>$descricao, "sql" => $sql));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 01: Lista Completa
+$app->get('/listarTipoSituacaoContratos', 'auth', function () use ($app) {
+		$link = createDB();
+		$sql = "select tipoSituacaoContrato.id, tipoSituacaoContrato.descricao from tipoSituacaoContrato order by tipoSituacaoContrato.id";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows ));
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 02: item unico
+$app->get('/getTipoSituacaoContrato/:idTipoSituacaoContrato', 'auth', function ($idTipoSituacaoContrato) use ($app) {
+		$idTipoSituacaoContrato = (int)$idTipoSituacaoContrato;
+		$link = createDB();
+		$sql = "select tipoSituacaoContrato.id, tipoSituacaoContrato.descricao from tipoSituacaoContrato  where tipoSituacaoContrato.id = ".$idTipoSituacaoContrato.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows[0] ));
+        }
+		 mysql_close($link);
+    }
+);
+// Update
+$app->post('/alterarTipoSituacaoContrato/:idTipoSituacaoContrato', 'auth', function ($idTipoSituacaoContrato) use ($app) {
+        
+        $data = json_decode($app->request()->getBody());
+        $idTipoSituacaoContrato = (int)$idTipoSituacaoContrato;
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+       
+		$link =createDB();
+        
+		$sql = "UPDATE tipoSituacaoContrato  SET  descricao = '".$descricao."' WHERE  id = ".$idTipoSituacaoContrato.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+        
+    }
+);
+// Delete
+$app->get('/excluirTipoSituacaoContrato/:idTipoSituacaoContrato', 'auth', function ($idTipoSituacaoContrato) use ($app) {       
+		$idTipoSituacaoContrato = (int)$idTipoSituacaoContrato;
+        $link =createDB();
+        
+        $sql = "DELETE FROM tipoSituacaoContrato WHERE id = ".$idTipoSituacaoContrato.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// fim Crud  Tipo SituacaoContrato
+
 $app->run();
