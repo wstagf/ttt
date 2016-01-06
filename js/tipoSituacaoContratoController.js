@@ -76,7 +76,7 @@ app.controller('tipoSituacaoContratoController', function ($scope, $http, toastr
     $scope.editarTipoSituacaoContrato = function (idTipoSituacaoContrato) {
         $http.get('api/getTipoSituacaoContrato/' + idTipoSituacaoContrato)
             .success(function (data) {
-                $scope.TipoSituacaoContrato = data.TipoSituacaoContrato;
+                $scope.TipoSituacaoContrato = data.result;
                 $scope.showEditarTipoSituacaoContrato();
             })
             .error(function (data) {
