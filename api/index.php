@@ -276,4 +276,106 @@ $app->get('/excluirPerfilUsuario/:idPerfilUsuario', 'auth', function ($idPerfilU
 // fim Crud  Perfil Usuario
 
 
+
+
+// Crud Tipo Agencia
+$app->post(
+    '/createTipoAgencia',
+    function () use ($app) {
+		$data = json_decode($app->request()->getBody());
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+
+        $link =createDB();
+       
+		$sql = "INSERT INTO tipoAgencia (descricao) VALUES ('".$descricao."');";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false, "descricao"=>$descricao, "sql" => $sql));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 01: Lista Completa
+$app->get('/listarTipoAgencias', 'auth', function () use ($app) {
+		$link = createDB();
+		$sql = "select tipoagencia.id, tipoagencia.descricao from tipoagencia order by tipoagencia.id";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows ));
+        }
+		 mysql_close($link);
+    }
+);
+// READ - 02: item unico
+$app->get('/getTipoAgencia/:idTipoAgencia', 'auth', function ($idTipoAgencia) use ($app) {
+		$idTipoAgencia = (int)$idTipoAgencia;
+		$link = createDB();
+		$sql = "select tipoagencia.id, tipoagencia.descricao from tipoagencia  where tipoagencia.id = ".$idTipoAgencia.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+			$rows = array();
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH))
+			{
+				$rows[] = $row;
+			}
+			echo json_encode(array("erro"=>"false", "result"=>$rows[0] ));
+        }
+		 mysql_close($link);
+    }
+);
+// Update
+$app->post('/alterarTipoAgencia/:idTipoAgencia', 'auth', function ($idTipoAgencia) use ($app) {
+        
+        $data = json_decode($app->request()->getBody());
+        $idTipoAgencia = (int)$idTipoAgencia;
+        $descricao = (isset($data->descricao)) ? $data->descricao : "";
+       
+		$link =createDB();
+        
+		$sql = "UPDATE tipoagencia  SET  descricao = '".$descricao."' WHERE  id = ".$idTipoAgencia.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+        
+    }
+);
+// Delete
+$app->get('/excluirTipoAgencia/:idTipoAgencia', 'auth', function ($idTipoAgencia) use ($app) {       
+		$idTipoAgencia = (int)$idTipoAgencia;
+        $link =createDB();
+        
+        $sql = "DELETE FROM tipoagencia WHERE id = ".$idTipoAgencia.";";
+		$result =  mysql_query($sql, $link);
+        if (mysql_errno($link) > 0 ) {
+			echo json_encode(array("erro"=>true, "mysql_errno" => mysql_errno($link), "mysql_error" => mysql_error($link), "sql" => $sql));
+        } else {
+            if ($result) {
+                echo json_encode(array("erro"=>false));
+            } 
+        }
+		 mysql_close($link);
+    }
+);
+// fim Crud  Tipo Agencia
+
+
 $app->run();
